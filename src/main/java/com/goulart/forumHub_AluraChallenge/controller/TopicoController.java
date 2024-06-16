@@ -1,17 +1,20 @@
 package com.goulart.forumHub_AluraChallenge.controller;
 
-import com.goulart.forumHub_AluraChallenge.dto.DadosListaTopico;
 import com.goulart.forumHub_AluraChallenge.Topico.Topico;
+import com.goulart.forumHub_AluraChallenge.dto.DadosAtualizacaoTopico;
+import com.goulart.forumHub_AluraChallenge.dto.DadosListaTopico;
 import com.goulart.forumHub_AluraChallenge.dto.DadosTopico;
 import com.goulart.forumHub_AluraChallenge.repository.TopicoRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -38,8 +41,39 @@ public class TopicoController {
     }
 
     @GetMapping
-    public List<DadosListaTopico> listarTopicos() {
-        return repository.findAll().stream().map(DadosListaTopico::new).toList();
+    public Page<DadosListaTopico> listarTopicos(@PageableDefault(size = 10, sort = {"dataDeCriacao"}) Pageable paginacao) {
+        return repository.findAll(paginacao).map(DadosListaTopico::new);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<DadosListaTopico> detalharTopico(@PathVariable Long id) {
+        Optional<Topico> topico = repository.findById(id);
+        if (topico.isPresent()) {
+            return ResponseEntity.ok(new DadosListaTopico(topico.get()));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Transactional
+    @PutMapping("/{id}")
+    public ResponseEntity<String> atualizar(@PathVariable Long id, @RequestBody @Valid DadosAtualizacaoTopico dados) {
+        Optional<Topico> topicoOptional = repository.findById(id);
+        if (topicoOptional.isPresent()) {
+            Topico topico = topicoOptional.get();
+            topico.atualizarInformacoes(dados); // passando o objeto dados inteiro
+            repository.save(topico);
+            return new ResponseEntity<>("Tópico atualizado com sucesso", HttpStatus.OK);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Transactional
+    @DeleteMapping("/{id}")
+    public void deletar(@PathVariable Long id) {
+        repository.deleteById(id);
     }
 
 }
+

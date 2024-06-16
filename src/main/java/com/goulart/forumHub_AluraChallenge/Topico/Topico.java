@@ -1,7 +1,9 @@
 package com.goulart.forumHub_AluraChallenge.Topico;
 
+import com.goulart.forumHub_AluraChallenge.dto.DadosAtualizacaoTopico;
 import com.goulart.forumHub_AluraChallenge.dto.DadosTopico;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -45,5 +47,20 @@ public class Topico {
         this.nomeAutor = dados.nome_autor();
         this.emailAutor = dados.email_autor();
         this.curso = dados.curso();
+    }
+
+
+    public void atualizarInformacoes(DadosAtualizacaoTopico dados) {
+
+        if (dados.emailAutor() != null) {
+            this.emailAutor = dados.emailAutor();
+        }
+        if (dados.mensagem() != null) {
+            this.mensagem = dados.mensagem();
+        }
+        if (dados.curso() != null) {
+            this.curso = dados.curso();
+        }
+
     }
 }
