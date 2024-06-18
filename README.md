@@ -1,10 +1,16 @@
 # Challenge ForumHub
 
+## Imagem de capa
+
 ![Capa](https://github.com/LeandroGoulart/forumHub_AluraChallenge/assets/82618246/5d574377-8638-419a-8e95-738174515cc5)
 
+----
 
-![Badge](https://github.com/LeandroGoulart/forumHub_AluraChallenge/assets/82618246/f8a64b39-58df-48f9-bd1c-d32521977b42)
+## Badge adiquirida
 
+<p align="center">
+  <img src="https://github.com/LeandroGoulart/forumHub_AluraChallenge/assets/82618246/f8a64b39-58df-48f9-bd1c-d32521977b42" width="60" height="60">
+</p>
 
 ## Índice
 
