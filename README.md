@@ -1,8 +1,10 @@
 # Challenge ForumHub
 
-![Imagem de Capa](URL_DA_IMAGEM_DE_CAPA)
+![Capa](https://github.com/LeandroGoulart/forumHub_AluraChallenge/assets/82618246/5d574377-8638-419a-8e95-738174515cc5)
 
-![Badge](URL_DO_BADGE)
+
+![Badge](https://github.com/LeandroGoulart/forumHub_AluraChallenge/assets/82618246/f8a64b39-58df-48f9-bd1c-d32521977b42)
+
 
 ## Índice
 
@@ -40,7 +42,7 @@ Em desenvolvimento.
 
 ## Acesso ao Projeto
 
-O projeto pode ser acessado através do seguinte link: [Link do Projeto](URL_DO_PROJETO)
+O projeto pode ser acessado através do seguinte link: [Link do Projeto]([URL_DO_PROJETO](https://github.com/LeandroGoulart/forumHub_AluraChallenge))
 
 ## Tecnologias utilizadas
 
@@ -56,7 +58,7 @@ Alura Caelum
 
 ## Pessoas Desenvolvedoras do Projeto
 
-- [Leandro Goulart](Link do GitHub de Leandro Goulart)
+- [Leandro Goulart]([Link do GitHub de Leandro Goulart](https://github.com/LeandroGoulart))
 
 ## Licença
 
