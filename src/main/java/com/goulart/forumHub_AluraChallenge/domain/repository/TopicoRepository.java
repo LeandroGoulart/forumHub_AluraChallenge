@@ -1,6 +1,6 @@
-package com.goulart.forumHub_AluraChallenge.repository;
+package com.goulart.forumHub_AluraChallenge.domain.repository;
 
-import com.goulart.forumHub_AluraChallenge.Topico.Topico;
+import com.goulart.forumHub_AluraChallenge.domain.model.Topico;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

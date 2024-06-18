@@ -1,10 +1,11 @@
 package com.goulart.forumHub_AluraChallenge.controller;
 
-import com.goulart.forumHub_AluraChallenge.Topico.Topico;
-import com.goulart.forumHub_AluraChallenge.dto.DadosAtualizacaoTopico;
-import com.goulart.forumHub_AluraChallenge.dto.DadosListaTopico;
-import com.goulart.forumHub_AluraChallenge.dto.DadosTopico;
-import com.goulart.forumHub_AluraChallenge.repository.TopicoRepository;
+import com.goulart.forumHub_AluraChallenge.domain.model.Topico;
+import com.goulart.forumHub_AluraChallenge.domain.dto.DadosAtualizacaoTopico;
+import com.goulart.forumHub_AluraChallenge.domain.dto.DadosDetalhamentoTopico;
+import com.goulart.forumHub_AluraChallenge.domain.dto.DadosListaTopico;
+import com.goulart.forumHub_AluraChallenge.domain.dto.DadosTopico;
+import com.goulart.forumHub_AluraChallenge.domain.repository.TopicoRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Optional;
 
@@ -26,30 +28,38 @@ public class TopicoController {
 
     @Transactional
     @PostMapping
-    public ResponseEntity<String> cadastrartopico(@RequestBody @Valid DadosTopico dados) {
-
+    public ResponseEntity cadastrartopico(@RequestBody @Valid DadosTopico dados, UriComponentsBuilder uriBuilder ) {
+        // Verifica se já existe um tópico com o mesmo título e autor
         Optional<Topico> topicoExistente = repository.findByTituloAndNomeAutor(dados.titulo(), dados.nome_autor());
-
+        // Se o tópico já existir, retorna um erro
         if (topicoExistente.isPresent()) {
-            return new ResponseEntity<>("Tópico já existe com o mesmo título e autor", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<> (new DadosDetalhamentoTopico(topicoExistente.get(), "Tópico já existe com o mesmo título e autor"), HttpStatus.BAD_REQUEST);
         }
+        var topico = new Topico( dados);
 
-        Topico topico = new Topico(dados);
         repository.save(topico);
 
-        return new ResponseEntity<>("Tópico criado com sucesso", HttpStatus.CREATED);
+        // Cria a URI do novo tópico
+        var uri = uriBuilder.path("/topicos/{id}").buildAndExpand(topico.getId()).toUri();
+
+        // Retorna a URI do novo tópico
+        return ResponseEntity.created(uri).body(new DadosDetalhamentoTopico(topico, "Topico criado com sucesso!!"));
     }
 
     @GetMapping
-    public Page<DadosListaTopico> listarTopicos(@PageableDefault(size = 10, sort = {"dataDeCriacao"}) Pageable paginacao) {
+    public Page<DadosListaTopico> listarTopicos(
+            @PageableDefault(size = 10, sort = {"dataDeCriacao"}) Pageable paginacao) {
+
         return repository.findAll(paginacao).map(DadosListaTopico::new);
     }
 
+
     @GetMapping("/{id}")
-    public ResponseEntity<DadosListaTopico> detalharTopico(@PathVariable Long id) {
-        Optional<Topico> topico = repository.findById(id);
-        if (topico.isPresent()) {
-            return ResponseEntity.ok(new DadosListaTopico(topico.get()));
+    public ResponseEntity<DadosDetalhamentoTopico> detalharTopico(@PathVariable Long id) {
+        Optional<Topico> topicoOptional = repository.findById(id);
+        if (topicoOptional.isPresent()) {
+            var topico = topicoOptional.get();
+            return ResponseEntity.ok(new DadosDetalhamentoTopico(topico, "Detalhes do tópico"));
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -70,9 +80,15 @@ public class TopicoController {
     }
 
     @Transactional
-    @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) {
-        repository.deleteById(id);
+    @DeleteMapping("/{id}") // recebe id aqui, vindo da requisição
+    public ResponseEntity<?> deletar(@PathVariable Long id) {
+        Optional<Topico> topicoOptional = repository.findById(id);
+        if (topicoOptional.isPresent()) {
+            repository.deleteById(id);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }

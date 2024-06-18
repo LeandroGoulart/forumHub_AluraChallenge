@@ -1,6 +1,6 @@
-package com.goulart.forumHub_AluraChallenge.dto;
+package com.goulart.forumHub_AluraChallenge.domain.dto;
 
-import com.goulart.forumHub_AluraChallenge.Topico.Topico;
+import com.goulart.forumHub_AluraChallenge.domain.model.Topico;
 
 import java.time.LocalDate;
 
